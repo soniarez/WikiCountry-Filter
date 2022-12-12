@@ -53,9 +53,15 @@ const createData = (
   return { region, subregion, country, capital, population };
 };
 
-const TableByRegion = ({ rawCountriesData, selectedRegion }) => {
+type TableByRegionProps = {
+  rawCountriesData: any[];
+  selectedRegion: string;
+}
+
+const TableByRegion = ({ rawCountriesData, selectedRegion } : TableByRegionProps) => {
   const [rows, setRows] = useState<Data[]>([]);
  
+  //console.log(rawCountriesData, "rawCountriesData")
   useEffect(() => {
     if (selectedRegion) {
         const filteredData = rawCountriesData.filter(
@@ -64,10 +70,10 @@ const TableByRegion = ({ rawCountriesData, selectedRegion }) => {
         //console.log(filteredData, "filteredData")
         createRows(filteredData);
       }    
-  }, [selectedRegion]);
+  }, [rawCountriesData, selectedRegion]);
 
 
-  const createRows = dataRow => {
+  const createRows = (dataRow:any) : void => {
     const rows = dataRow.map(row => {
       return createData(row.region, row.subregion, row.name, row.capital, row.population);
     });
