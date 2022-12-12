@@ -3,9 +3,9 @@ import TableByRegion from '../components/TableByRegion';
 
 const Dashboard = ({ rawCountriesData }) => {
   const [regions, setRegions] = useState<string[]>([]);
-  const [selectedRegion, setSelectedRegion] = useState<string>('Africa');
+  const [selectedRegion, setSelectedRegion] = useState<string>('Asia');
 
-  console.log(rawCountriesData, 'rawCountriesData');
+  //console.log(rawCountriesData, 'rawCountriesData');
 
   useEffect(() => {
     fiterByRegion();
@@ -27,10 +27,10 @@ const Dashboard = ({ rawCountriesData }) => {
       <h1>Wiki Country</h1>
       {/*Sacar select y select array (map) a componentes independientes c/u */}
       <label htmlFor="region-select">Choose a region:</label>
-      <select name="regions" id="region-select" onChange={handleRegionChange}>
-        <option value="">--Please choose an option--</option>
-        {regions.map((region, index) => (
-          <option key={index} value={region}>
+      <select name="regions" className="region-select" defaultValue="Asia" onChange={handleRegionChange}>
+        <option value="regions" disabled>--Regions--</option>
+        {regions?.map((region) => (
+          <option key={region} value={region} >
             {region}
           </option>
         ))}
