@@ -14,9 +14,16 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useRouter } from 'next/router';
 
+// const pages = [
+//   "home", "dashboard"
+// ];
+
 const pages = [
-  "home", "dashboard"
+  { label: 'Home', href: ''},
+  { label: 'dashboard', href: 'dashboard'},
 ];
+
+
 const settings = ['Profile', 'Dashboard', 'Logout'];
 
 const Nav = () => {
@@ -35,10 +42,19 @@ const Nav = () => {
 
   const handleCloseNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(null);
-    let page = event.currentTarget.textContent;
-    console.log(page)
-    router.push(`/${page}`)
+    // let page = event.currentTarget.textContent;
+    // console.log({target: event.currentTarget})
+    // if (page === 'Home') 
+    //   router.push(`/`)
+    // else
+    //   router.push(`/${page}`)
   };
+
+  const handleRouteRedirection = (route: string) => {
+    return (event: React.MouseEvent<HTMLElement>) => {
+      router.push(`/${route}`)
+    }
+  }
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -104,11 +120,11 @@ const Nav = () => {
             >
               {pages.map(page => (
                 
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page.href} onClick={handleRouteRedirection(page.href)}>
                 
       
                   
-                <Typography textAlign="center">{page}</Typography>
+                <Typography textAlign="center">{page.label}</Typography>
                 
               </MenuItem>
               
@@ -137,11 +153,11 @@ const Nav = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map(page => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
+                key={page.href}
+                onClick={handleRouteRedirection(page.href)}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
+                {page.label}
               </Button>
             ))}
           </Box>
