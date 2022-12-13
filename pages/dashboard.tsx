@@ -7,20 +7,15 @@ const Dashboard = ({ rawCountriesData }) => {
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
 
-  // console.log(rawCountriesData, 'rawCountriesData');
-
   //console.log(rawCountriesData[145].languages[0].name, "languages.name")
-  
 
   useEffect(() => {
     fiterByRegion();
-
   }, []);
 
   const handleRegionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRegion(event.target.value);
-    fiterByLanguagePerRegion()
-    //console.log(selectedLanguage, " selectedlenguages")
+    fiterByLanguagePerRegion(event.target.value);
   };
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,24 +24,25 @@ const Dashboard = ({ rawCountriesData }) => {
 
   const fiterByRegion = () => {
     const uniqueRegions = [
-      ...new Set(rawCountriesData.map(item => item.region)),
+      ...new Set(rawCountriesData.map(item => item.region))
     ];
     setRegions(uniqueRegions);
-
   };
 
-  const fiterByLanguagePerRegion = () => {
-    const filteredData = rawCountriesData.filter(
+  const fiterByLanguagePerRegion = (selectedRegion) => {
+    const countriesBySelectedRegion = rawCountriesData.filter(
       item => item.region === selectedRegion
     );
-    console.log(filteredData, "filteredData")
+    console.log(countriesBySelectedRegion, "countriesBySelectedRegion")
+
+    //flat map o destructuracion de array para poder acceder a más lenguages
     const uniqueLanguages = [
-      ...new Set(filteredData.map(item => item.languages[0].name)),
+      ...new Set(countriesBySelectedRegion.map(item => item.languages[0].name)),
     ];
-    setLanguages(uniqueLanguages);
+    setLanguages(uniqueLanguages); 
   };
   
-  //console.log(languages)
+  //console.log(selectedLanguage, "selectedLanguage");
 
   return (
     <div>
@@ -71,8 +67,7 @@ const Dashboard = ({ rawCountriesData }) => {
             {language}
           </option>
         ))} 
-
-
+        
       </select>
 
       <TableByRegion rawCountriesData={rawCountriesData} selectedRegion={selectedRegion} />
