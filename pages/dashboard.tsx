@@ -9,8 +9,6 @@ const Dashboard = ({ rawCountriesData }) => {
   const [countriesByLanguagePerRegion, setCountriesByLanguagePerRegion] = useState<string[]>([]);
   const [regionAndLanguage, setRegionAndLanguage] = useState<string[]>([]);
 
-  //console.log(rawCountriesData[145].languages[0].name, "languages.name")
-
   useEffect(() => {
     fiterByRegion();
   }, []);
@@ -22,7 +20,6 @@ const Dashboard = ({ rawCountriesData }) => {
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedLanguage(event.target.value);
-    //fiterByLanguagePerRegion(event.target.value);
     filterCountriesBySelectedLanguage(event.target.value);
   };
 
@@ -37,18 +34,12 @@ const Dashboard = ({ rawCountriesData }) => {
     const countriesBySelectedRegion = rawCountriesData.filter(
       item => item.region === selectedRegion
     );
-    //console.log(countriesBySelectedRegion, "countriesBySelectedRegion")
 
     const uniqueLanguages = [
       ...new Set(countriesBySelectedRegion.map(item => item.languages[0].name)),
     ];
     setLanguages(uniqueLanguages);
     setCountriesByLanguagePerRegion(countriesBySelectedRegion);
-    
-   /*  const countriesBySelectedLanguage = countriesBySelectedRegion.filter(
-      item => item.languages[0].name === selectedLanguage
-    );
-    setRegionAndLanguage(countriesBySelectedLanguage); */
   };
   
   const filterCountriesBySelectedLanguage = (selectedLanguage) => {
