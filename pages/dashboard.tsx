@@ -6,6 +6,8 @@ const Dashboard = ({ rawCountriesData }) => {
   const [selectedRegion, setSelectedRegion] = useState<string>('');
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+  const [countriesByLanguagePerRegion, setCountriesByLanguagePerRegion] = useState<string[]>([]);
+  const [regionAndLanguage, setRegionAndLanguage] = useState<string[]>([]);
 
   //console.log(rawCountriesData[145].languages[0].name, "languages.name")
 
@@ -20,6 +22,8 @@ const Dashboard = ({ rawCountriesData }) => {
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedLanguage(event.target.value);
+    //fiterByLanguagePerRegion(event.target.value);
+    filterCountriesBySelectedLanguage(event.target.value);
   };
 
   const fiterByRegion = () => {
@@ -33,16 +37,28 @@ const Dashboard = ({ rawCountriesData }) => {
     const countriesBySelectedRegion = rawCountriesData.filter(
       item => item.region === selectedRegion
     );
-    console.log(countriesBySelectedRegion, "countriesBySelectedRegion")
+    //console.log(countriesBySelectedRegion, "countriesBySelectedRegion")
 
-    //flat map o destructuracion de array para poder acceder a más lenguages
     const uniqueLanguages = [
       ...new Set(countriesBySelectedRegion.map(item => item.languages[0].name)),
     ];
-    setLanguages(uniqueLanguages); 
+    setLanguages(uniqueLanguages);
+    setCountriesByLanguagePerRegion(countriesBySelectedRegion);
+    
+   /*  const countriesBySelectedLanguage = countriesBySelectedRegion.filter(
+      item => item.languages[0].name === selectedLanguage
+    );
+    setRegionAndLanguage(countriesBySelectedLanguage); */
   };
   
-  //console.log(selectedLanguage, "selectedLanguage");
+  const filterCountriesBySelectedLanguage = (selectedLanguage) => {
+    const temp = countriesByLanguagePerRegion.filter(
+      item => item.languages[0].name === selectedLanguage
+    );
+    setRegionAndLanguage(temp);
+  }
+
+ console.log(regionAndLanguage, "regionAndLanguage")
 
   return (
     <div>
