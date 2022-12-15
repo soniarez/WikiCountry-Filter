@@ -40,15 +40,15 @@ interface Data {
   subregion: string;
   country: string;
   capital: string;
-  population: number,
+  population: number;
 }
 
 const createData = (
   region: string,
   subregion: string,
   country: string,
-  capital: string, 
-  population: number,
+  capital: string,
+  population: number
 ): Data => {
   return { region, subregion, country, capital, population };
 };
@@ -56,26 +56,29 @@ const createData = (
 type TableByRegionProps = {
   rawCountriesData: any[];
   selectedRegion: string;
-}
+};
 
-const TableByRegion = ({ rawCountriesData, selectedRegion } : TableByRegionProps) => {
+
+
+const TableByRegion = ({ tableDataSender }: TableByRegionProps) => {
   const [rows, setRows] = useState<Data[]>([]);
- 
-  //console.log(rawCountriesData, "rawCountriesData")
+
+ //console.log(tableDataSender, "tableDataSender")
+  //console.log(regionAndLanguageSelection, "regionAndLanguageSelection");
+
   useEffect(() => {
-    if (selectedRegion) {
-        const filteredData = rawCountriesData.filter(
-          item => item.region === selectedRegion
-        );
-        //console.log(filteredData, "filteredData")
-        createRows(filteredData);
-      }    
-  }, [rawCountriesData, selectedRegion]);
+    createRows(tableDataSender);
+  }, [tableDataSender]);
 
-
-  const createRows = (dataRow:any) : void => {
+  const createRows = (dataRow: any): void => {
     const rows = dataRow.map(row => {
-      return createData(row.region, row.subregion, row.name, row.capital, row.population);
+      return createData(
+        row.region,
+        row.subregion,
+        row.name,
+        row.capital,
+        row.population
+      );
     });
     setRows(rows);
   };
