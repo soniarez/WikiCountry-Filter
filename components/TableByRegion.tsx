@@ -58,14 +58,17 @@ type TableByRegionProps = {
   selectedRegion: string;
 };
 
-const TableByRegion = ({ countriesByRegionData, regionAndLanguageSelection }: TableByRegionProps) => {
+
+
+const TableByRegion = ({ tableDataSender }: TableByRegionProps) => {
   const [rows, setRows] = useState<Data[]>([]);
 
-  console.log(regionAndLanguageSelection, "regionAndLanguageSelection");
+ //console.log(tableDataSender, "tableDataSender")
+  //console.log(regionAndLanguageSelection, "regionAndLanguageSelection");
 
   useEffect(() => {
-    createRows(countriesByRegionData);
-  }, [countriesByRegionData]);
+    createRows(tableDataSender);
+  }, [tableDataSender]);
 
   const createRows = (dataRow: any): void => {
     const rows = dataRow.map(row => {

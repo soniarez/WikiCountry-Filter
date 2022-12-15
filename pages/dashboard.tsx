@@ -19,20 +19,38 @@ const Dashboard = ({ rawCountriesData }) => {
     string[]
   >([]);
 
+  const [tableDataSender, setTableDataSender] = useState<string[]>([]);
+
   useEffect(() => {
     fiterByRegionDropdown();
     filterByLanguageDropdown();
+    renderTable();
   }, [selectedRegion, selectedLanguage]);
 
   const handleRegionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRegion(event.target.value);
     filterByLanguageDropdown();
     filterCountriesBySelectedRegion(event.target.value);
+    console.log(selectedLanguage, "before")
+    setSelectedLanguage("");
+    setLanguages([])
+    console.log(selectedLanguage, "after")
   };
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedLanguage(event.target.value);
     filterCountriesBySelectedLanguage(event.target.value);
+  };
+
+  //Renders table based on selected region or and language
+  const renderTable = () => {
+    if (selectedRegion.length > 0 && selectedLanguage.length === 0) {
+      //console.log(selectedRegion, selectedLanguage)
+      setTableDataSender(countriesByRegionData);
+    } else if (selectedLanguage.length > 0 && selectedLanguage.length > 0) {
+      console.log(selectedRegion, selectedLanguage)
+      setTableDataSender(regionAndLanguageSelection);
+    }
   };
 
   //Populates the region select
@@ -44,7 +62,7 @@ const Dashboard = ({ rawCountriesData }) => {
   };
 
   //Filter data per region to populate the table
-  const filterCountriesBySelectedRegion = selectedRegion => {
+  const filterCountriesBySelectedRegion = (selectedRegion: string): void => {
     const countriesBySelectedRegion = rawCountriesData.filter(
       item => item.region === selectedRegion
     );
@@ -61,12 +79,14 @@ const Dashboard = ({ rawCountriesData }) => {
   };
 
   //Filer data by language acording to the selected language to populate the table
-  const filterCountriesBySelectedLanguage = selectedLanguage => {
+ const filterCountriesBySelectedLanguage = (
+    selectedLanguage: string
+  ): void => {
     const temp = countriesByLanguageData.filter(
       item => item.languages[0].name === selectedLanguage
     );
     setRegionAndLanguageSelection(temp);
-  };
+  }; 
 
   return (
     <div>
@@ -81,10 +101,7 @@ const Dashboard = ({ rawCountriesData }) => {
         handleLanguageChange={handleLanguageChange}
       />
 
-      <TableByRegion
-        countriesByRegionData={countriesByRegionData}
-        regionAndLanguageSelection={regionAndLanguageSelection}
-      />
+      <TableByRegion tableDataSender={tableDataSender} />
     </div>
   );
 };
