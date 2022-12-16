@@ -1,20 +1,26 @@
+import Dropdown from "./Dropdown";
 
-const RegionDropdown = ({regions, handleRegionChange }) => {
+type RegionDropdownProps = {
+  regions: string[];
+  onRegionChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+};
+
+const RegionDropdown = ({
+  regions,
+  onRegionChange,
+}: RegionDropdownProps) => {
   return (
-    <div>
-      
-      {/*Sacar map a componente separado?*/}
-      <label htmlFor="region-select">Choose a region:</label>
-      <select name="regions" className="region-select" defaultValue="" onChange={handleRegionChange}>
-        <option value="regions">--Regions--</option>
-        {regions?.map((region) => (
-          <option key={region} value={region} >
-            {region}
-          </option>
-        ))}
-      </select>
-    </div>
-  )
-}
+    <>
+      <Dropdown
+        title="region"
+        label="regions"
+        option={regions}
+        value="regions"
+        onChange={onRegionChange}
+      />
+    </>
+  );
+};
 
-export default RegionDropdown
+export default RegionDropdown;
+
