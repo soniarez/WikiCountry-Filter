@@ -1,19 +1,25 @@
+import Dropdown from "./Dropdown";
 
-const LanguageDropdown = ({languages, handleLanguageChange}) => {
+type LanguageDropdownProps = {
+  languages: string[];
+  handleLanguageChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+};
+
+const LanguageDropdown = ({
+  languages,
+  handleLanguageChange,
+}: LanguageDropdownProps) => {
   return (
-    <div>
-      {/*Sacar map a componente separado?*/}
-      <label htmlFor="languages-select">Choose a language:</label>
-      <select name="languages" className="language-select" defaultValue="" onChange={handleLanguageChange}>
-        <option value="languages" >--Languages--</option>
-        {languages?.map((language) => (
-          <option key={language} value={language} >
-            {language}
-          </option>
-        ))} 
-      </select>
-    </div>
-  )
-}
+    <>
+      <Dropdown
+        title="language"
+        label="languages"
+        option={languages}
+        value="languages"
+        handleChange={handleLanguageChange}
+      />
+    </>
+  );
+};
 
-export default LanguageDropdown
+export default LanguageDropdown;

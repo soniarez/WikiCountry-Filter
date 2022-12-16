@@ -7,9 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Country } from '../types/rawCountriesDataType';
 
 interface Column {
-  id: 'region' | 'subregion' | 'country' | 'capital' | 'population';
+  id: 'region' | 'subregion' | 'country' | 'capital' | 'population' | "currency";
   label: string;
   minWidth?: number;
   align?: 'right';
@@ -33,6 +34,12 @@ const columns: readonly Column[] = [
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
+  {
+    id: 'currency',
+    label: 'currency',
+    minWidth: 170,
+    align: 'right',
+  },
 ];
 
 interface Data {
@@ -41,6 +48,7 @@ interface Data {
   country: string;
   capital: string;
   population: number;
+  currency: string;
 }
 
 const createData = (
@@ -48,27 +56,25 @@ const createData = (
   subregion: string,
   country: string,
   capital: string,
-  population: number
+  population: number, 
+  currency: string
 ): Data => {
-  return { region, subregion, country, capital, population };
+  return { region, subregion, country, capital, population, currency };
 };
 
 type TableByRegionProps = {
-  rawCountriesData: any[];
-  selectedRegion: string;
+  tableData: Country;
 };
 
 
-
-const TableByRegion = ({ tableDataSender }: TableByRegionProps) => {
+const CountriesTable = ({ tableData }: TableByRegionProps) => {
   const [rows, setRows] = useState<Data[]>([]);
 
- //console.log(tableDataSender, "tableDataSender")
-  //console.log(regionAndLanguageSelection, "regionAndLanguageSelection");
+  //console.log(tableData, "tableData")
 
   useEffect(() => {
-    createRows(tableDataSender);
-  }, [tableDataSender]);
+    createRows(tableData);
+  }, [tableData]);
 
   const createRows = (dataRow: any): void => {
     const rows = dataRow.map(row => {
@@ -77,7 +83,8 @@ const TableByRegion = ({ tableDataSender }: TableByRegionProps) => {
         row.subregion,
         row.name,
         row.capital,
-        row.population
+        row.population,
+        row.currencies[0].name
       );
     });
     setRows(rows);
@@ -148,4 +155,4 @@ const TableByRegion = ({ tableDataSender }: TableByRegionProps) => {
     </Paper>
   );
 };
-export default TableByRegion;
+export default CountriesTable;

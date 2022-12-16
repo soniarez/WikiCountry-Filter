@@ -1,40 +1,36 @@
-import { useState, useEffect } from 'react';
-import RegionDropdown from '../components/RegionDropdown';
-import LanguageDropdown from '../components/LanguageDropdown';
-import TableByRegion from '../components/TableByRegion';
+import { useState, useEffect } from "react";
+import { Country } from "../types/rawCountriesDataType";
+import RegionDropdown from "../components/RegionDropdown";
+import LanguageDropdown from "../components/LanguageDropdown";
+import CountriesTable from "../components/CountriesTable";
 
-const Dashboard = ({ rawCountriesData }) => {
+type dashboardProps = {
+  rawCountriesData: Country;
+};
+
+const Dashboard = ({ rawCountriesData }: dashboardProps) => {
   const [regions, setRegions] = useState<string[]>([]);
-  const [selectedRegion, setSelectedRegion] = useState<string>('');
-  const [countriesByRegionData, setCountriesByRegionData] = useState<string[]>(
-    []
-  );
-
+  const [selectedRegion, setSelectedRegion] = useState<string>("Asia");
+  const [countriesByRegionData, setCountriesByRegionData] = useState<Country[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
-  const [countriesByLanguageData, setCountriesByLanguageData] = useState<
-    string[]
-  >([]);
-  const [regionAndLanguageSelection, setRegionAndLanguageSelection] = useState<
-    string[]
-  >([]);
-
-  const [tableDataSender, setTableDataSender] = useState<string[]>([]);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+  const [countriesByLanguageData, setCountriesByLanguageData] = useState<Country[]>([]);
+  const [tableData, setTableData] = useState<Country[]>([]);
 
   useEffect(() => {
-    fiterByRegionDropdown();
-    filterByLanguageDropdown();
-    renderTable();
+    populateRegionsDropdown();
+    populateLanguagesDropdown();
+    handleTableDataRender();
   }, [selectedRegion, selectedLanguage]);
+
+  console.log(selectedRegion)
 
   const handleRegionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedRegion(event.target.value);
-    filterByLanguageDropdown();
+    populateLanguagesDropdown();
     filterCountriesBySelectedRegion(event.target.value);
-    console.log(selectedLanguage, "before")
     setSelectedLanguage("");
-    setLanguages([])
-    console.log(selectedLanguage, "after")
+    setLanguages([]); 
   };
 
   const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,51 +38,44 @@ const Dashboard = ({ rawCountriesData }) => {
     filterCountriesBySelectedLanguage(event.target.value);
   };
 
-  //Renders table based on selected region or and language
-  const renderTable = () => {
-    if (selectedRegion.length > 0 && selectedLanguage.length === 0) {
-      //console.log(selectedRegion, selectedLanguage)
-      setTableDataSender(countriesByRegionData);
-    } else if (selectedLanguage.length > 0 && selectedLanguage.length > 0) {
-      console.log(selectedRegion, selectedLanguage)
-      setTableDataSender(regionAndLanguageSelection);
-    }
-  };
-
-  //Populates the region select
-  const fiterByRegionDropdown = () => {
+  const populateRegionsDropdown = () => {
     const uniqueRegions = [
-      ...new Set(rawCountriesData.map(item => item.region)),
+      ...new Set(rawCountriesData.map((item) => item.region)),
     ];
     setRegions(uniqueRegions);
   };
 
-  //Filter data per region to populate the table
   const filterCountriesBySelectedRegion = (selectedRegion: string): void => {
     const countriesBySelectedRegion = rawCountriesData.filter(
-      item => item.region === selectedRegion
+      (item) => item.region === selectedRegion
     );
     setCountriesByRegionData(countriesBySelectedRegion);
   };
 
-  //Populates the language select
-  const filterByLanguageDropdown = () => {
+  const populateLanguagesDropdown = () => {
     const uniqueLanguages = [
-      ...new Set(countriesByRegionData.map(item => item.languages[0].name)),
+      ...new Set(countriesByRegionData.map((item) => item.languages[0].name)),
     ];
     setLanguages(uniqueLanguages);
-    setCountriesByLanguageData(countriesByRegionData);
   };
 
-  //Filer data by language acording to the selected language to populate the table
- const filterCountriesBySelectedLanguage = (
+  const filterCountriesBySelectedLanguage = (
     selectedLanguage: string
   ): void => {
-    const temp = countriesByLanguageData.filter(
-      item => item.languages[0].name === selectedLanguage
+    const countriesBySelectedLanguage = countriesByRegionData.filter(
+      (item) => item.languages[0].name === selectedLanguage
     );
-    setRegionAndLanguageSelection(temp);
-  }; 
+    setCountriesByLanguageData(countriesBySelectedLanguage);
+  };
+
+  const handleTableDataRender = () => {
+    if (selectedRegion.length > 0 && selectedLanguage.length === 0) {
+      setTableData(countriesByRegionData);
+    } else if (selectedLanguage.length > 0 && selectedLanguage.length > 0) {
+      //console.log(selectedRegion, selectedLanguage);
+      setTableData(countriesByLanguageData);
+    }
+  };
 
   return (
     <div>
@@ -101,13 +90,13 @@ const Dashboard = ({ rawCountriesData }) => {
         handleLanguageChange={handleLanguageChange}
       />
 
-      <TableByRegion tableDataSender={tableDataSender} />
+      <CountriesTable tableData={tableData} />
     </div>
   );
 };
 
 export const getStaticProps = async () => {
-  const res = await fetch('https://restcountries.com/v2/all');
+  const res = await fetch("https://restcountries.com/v2/all");
   const rawCountriesData = await res.json();
 
   return {
