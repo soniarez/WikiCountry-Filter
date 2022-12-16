@@ -2,12 +2,12 @@ import Dropdown from "./Dropdown";
 
 type LanguageDropdownProps = {
   languages: string[];
-  handleLanguageChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onLanguageChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
 const LanguageDropdown = ({
   languages,
-  handleLanguageChange,
+  onLanguageChange,
 }: LanguageDropdownProps) => {
   return (
     <>
@@ -16,7 +16,7 @@ const LanguageDropdown = ({
         label="languages"
         option={languages}
         value="languages"
-        handleChange={handleLanguageChange}
+        onChange={onLanguageChange}
       />
     </>
   );

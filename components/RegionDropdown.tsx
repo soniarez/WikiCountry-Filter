@@ -2,12 +2,12 @@ import Dropdown from "./Dropdown";
 
 type RegionDropdownProps = {
   regions: string[];
-  handleRegionChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onRegionChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
 const RegionDropdown = ({
   regions,
-  handleRegionChange,
+  onRegionChange,
 }: RegionDropdownProps) => {
   return (
     <>
@@ -16,8 +16,7 @@ const RegionDropdown = ({
         label="regions"
         option={regions}
         value="regions"
-        defaultValue="Asia"
-        handleChange={handleRegionChange}
+        onChange={onRegionChange}
       />
     </>
   );
@@ -25,21 +24,3 @@ const RegionDropdown = ({
 
 export default RegionDropdown;
 
-/* 
-const RegionDropdown = ({regions, handleRegionChange }) => {
-  return (
-    <div>
-      
-      <label htmlFor="region-select">Choose a region:</label>
-      <select name="regions" className="region-select" defaultValue="" onChange={handleRegionChange}>
-        <option value="regions">--Regions--</option>
-        {regions?.map((region) => (
-          <option key={region} value={region} >
-            {region}
-          </option>
-        ))}
-      </select>
-    </div>
-  )
-}
- */

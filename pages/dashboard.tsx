@@ -2,15 +2,20 @@ import { useState, useEffect } from "react";
 import { Country } from "../types/rawCountriesDataType";
 import RegionDropdown from "../components/RegionDropdown";
 import LanguageDropdown from "../components/LanguageDropdown";
-import CountriesTable from "../components/CountriesTable";
+import CountriesTable from "../components/CountriesTable"; 
+
+
+/*Crear variable global y setearla en el getStaticProps, solo si no está definida previamente--> condicional 
+first: is undefined, if true i got to fetch data and set it, if is defined return it 
+fetch condicionalmete si la variable está seteada o no*/
 
 type dashboardProps = {
-  rawCountriesData: Country;
+  rawCountriesData: Country[];
 };
 
 const Dashboard = ({ rawCountriesData }: dashboardProps) => {
   const [regions, setRegions] = useState<string[]>([]);
-  const [selectedRegion, setSelectedRegion] = useState<string>("Asia");
+  const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [countriesByRegionData, setCountriesByRegionData] = useState<Country[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
@@ -25,7 +30,7 @@ const Dashboard = ({ rawCountriesData }: dashboardProps) => {
 
   console.log(selectedRegion)
 
-  const handleRegionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRegionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedRegion(event.target.value);
     populateLanguagesDropdown();
     filterCountriesBySelectedRegion(event.target.value);
@@ -33,7 +38,7 @@ const Dashboard = ({ rawCountriesData }: dashboardProps) => {
     setLanguages([]); 
   };
 
-  const handleLanguageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLanguageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedLanguage(event.target.value);
     filterCountriesBySelectedLanguage(event.target.value);
   };
@@ -69,10 +74,11 @@ const Dashboard = ({ rawCountriesData }: dashboardProps) => {
   };
 
   const handleTableDataRender = () => {
-    if (selectedRegion.length > 0 && selectedLanguage.length === 0) {
+    if(selectedRegion.length === 0 ){
+      setTableData(rawCountriesData)
+    } else if (selectedRegion.length > 0 && selectedLanguage.length === 0) {
       setTableData(countriesByRegionData);
     } else if (selectedLanguage.length > 0 && selectedLanguage.length > 0) {
-      //console.log(selectedRegion, selectedLanguage);
       setTableData(countriesByLanguageData);
     }
   };
@@ -82,12 +88,12 @@ const Dashboard = ({ rawCountriesData }: dashboardProps) => {
       <h1>Wiki Country</h1>
       <RegionDropdown
         regions={regions}
-        handleRegionChange={handleRegionChange}
+        onRegionChange={handleRegionChange}
       />
 
       <LanguageDropdown
         languages={languages}
-        handleLanguageChange={handleLanguageChange}
+        onLanguageChange={handleLanguageChange}
       />
 
       <CountriesTable tableData={tableData} />

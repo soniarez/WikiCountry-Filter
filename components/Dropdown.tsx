@@ -5,17 +5,19 @@ type DropdownProps = {
     option: string[];
     value: string;
     defaultValue?: string;
-    handleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
-const Dropdown = ({title, label, option, value, defaultValue,  handleChange} : DropdownProps) => {
+
+const Dropdown = ({title, label, option, value, defaultValue, onChange} : DropdownProps) => {
   return (
     <div>
       <label htmlFor={`${label}-select`}>Choose a {title} :</label>
       <select
         className="dropdown"
-        defaultValue={defaultValue}
-        onChange={handleChange}
+        defaultValue=""
+        onChange={onChange}
+
       >
         <option value={value} >--{label}--</option>
         {option?.map((option) => (

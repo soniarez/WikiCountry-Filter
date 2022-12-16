@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import { Country } from '../types/rawCountriesDataType';
 
 interface Column {
-  id: 'region' | 'subregion' | 'country' | 'capital' | 'population' | "currency";
+  id: 'region' | 'subregion' | 'country' | 'capital' | 'population';
   label: string;
   minWidth?: number;
   align?: 'right';
@@ -34,12 +34,12 @@ const columns: readonly Column[] = [
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
-  {
+/*   {
     id: 'currency',
     label: 'currency',
     minWidth: 170,
     align: 'right',
-  },
+  }, */
 ];
 
 interface Data {
@@ -48,7 +48,6 @@ interface Data {
   country: string;
   capital: string;
   population: number;
-  currency: string;
 }
 
 const createData = (
@@ -57,26 +56,23 @@ const createData = (
   country: string,
   capital: string,
   population: number, 
-  currency: string
 ): Data => {
-  return { region, subregion, country, capital, population, currency };
+  return { region, subregion, country, capital, population };
 };
 
 type TableByRegionProps = {
-  tableData: Country;
+  tableData: Country[];
 };
 
 
 const CountriesTable = ({ tableData }: TableByRegionProps) => {
   const [rows, setRows] = useState<Data[]>([]);
 
-  //console.log(tableData, "tableData")
-
   useEffect(() => {
     createRows(tableData);
   }, [tableData]);
 
-  const createRows = (dataRow: any): void => {
+  const createRows = (dataRow: Country[]): void => {
     const rows = dataRow.map(row => {
       return createData(
         row.region,
@@ -84,7 +80,6 @@ const CountriesTable = ({ tableData }: TableByRegionProps) => {
         row.name,
         row.capital,
         row.population,
-        row.currencies[0].name
       );
     });
     setRows(rows);
@@ -126,7 +121,7 @@ const CountriesTable = ({ tableData }: TableByRegionProps) => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(row => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.country}>
                     {columns.map(column => {
                       const value = row[column.id];
                       return (
